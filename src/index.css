@@ -125,4 +125,16 @@ All colors MUST be HSL.
       linear-gradient(90deg, hsl(var(--border)) 1px, transparent 1px);
     background-size: 50px 50px;
   }
+
+  .logo-glow-wrapper {
+    transition: filter 0.3s ease;
+    filter: drop-shadow(0 0 0 transparent);
+  }
+
+  .logo-glow-wrapper:hover {
+    filter: drop-shadow(0 0 8px hsl(190 100% 50% / 0.6)) 
+            drop-shadow(0 0 12px hsl(220 100% 60% / 0.4))
+            drop-shadow(0 0 16px hsl(250 100% 65% / 0.3))
+            drop-shadow(0 0 20px hsl(280 100% 65% / 0.2));
+  }
 }
