@@ -25,7 +25,7 @@ const Hero = ({ onStartProject }: HeroProps) => {
 
       {/* Content */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
+        <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in pt-40">
           {/* Logo/Brand */}
           <div className="inline-block flex flex-col items-center gap-1 mb-16">
             {/* Logo SVG with hover glow effect */}
