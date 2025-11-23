@@ -27,7 +27,7 @@ const Hero = ({ onStartProject }: HeroProps) => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
           {/* Logo/Brand */}
-          <div className="inline-block flex flex-col items-center gap-4 mb-4">
+          <div className="inline-block flex flex-col items-center gap-0.5 mb-8">
             {/* Logo SVG with hover glow effect */}
             <div className="logo-glow-wrapper">
               <svg
@@ -82,7 +82,7 @@ c-67 -35 -134 -105 -169 -175 -26 -54 -29 -70 -29 -160 0 -88 3 -107 27 -157
               </g>
             </svg>
             </div>
-            <h2 className="font-mono text-primary text-[1.125rem] tracking-widest">
+            <h2 className="font-mono text-primary text-[2.25rem] tracking-widest">
               TANRIKULU.DEV
             </h2>
           </div>
