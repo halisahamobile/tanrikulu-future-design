@@ -35,8 +35,8 @@ const Hero = ({ onStartProject }: HeroProps) => {
                 version="1.0"
                 preserveAspectRatio="xMidYMid meet"
                 viewBox="258.03 280.9 509.19 459.1"
-                width="400"
-                height="400"
+                width="240"
+                height="240"
                 className="text-white"
               >
                 <g
