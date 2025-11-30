@@ -1,6 +1,5 @@
-import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Mail, Send } from "lucide-react";
+import { Mail } from "lucide-react";
 
 const Contact = () => {
   return (
@@ -46,16 +45,6 @@ const Contact = () => {
               </a>
             </div>
 
-            {/* CTA */}
-            <div className="text-center pt-6">
-              <Button variant="hero" size="lg" className="group">
-                <Send className="mr-2 h-5 w-5" />
-                Send Message
-              </Button>
-              <p className="text-sm text-muted-foreground mt-4">
-                Typically respond within 24 hours
-              </p>
-            </div>
 
             {/* Optional: Social proof or additional info */}
             <div className="pt-8 border-t border-border">
