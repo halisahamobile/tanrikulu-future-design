@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import heroImage from "@/assets/hero-bg.jpg";
 
 interface HeroProps {
@@ -78,8 +79,8 @@ const Hero = ({ onStartProject }: HeroProps) => {
               Start Your Project
               <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
             </Button>
-            <Button variant="glass" size="lg">
-              View Our Work
+            <Button variant="glass" size="lg" asChild>
+              <Link to="/work">View Our Work</Link>
             </Button>
           </div>
 
