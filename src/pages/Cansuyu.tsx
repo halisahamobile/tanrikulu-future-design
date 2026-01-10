@@ -45,28 +45,11 @@ const Cansuyu = () => {
           {/* Logo Section */}
           <div className="flex justify-center mb-12">
             <div className="relative logo-glow-wrapper-green">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                version="1.0"
-                preserveAspectRatio="xMidYMid meet"
-                viewBox="0 0 1000 1000"
-                width="240"
-                height="240"
-              >
-                <g fill="#4ade80" stroke="#4ade80" strokeWidth="50" strokeLinecap="round" strokeLinejoin="round">
-                  {/* Outer Circle */}
-                  <circle cx="500" cy="500" r="450" fill="none" />
-                  {/* Stylized P shape - simplified version matching the description */}
-                  {/* Vertical stem on left */}
-                  <path d="M 200 200 L 200 800" strokeWidth="60" />
-                  {/* Top horizontal bar */}
-                  <path d="M 200 200 L 550 200" strokeWidth="60" />
-                  {/* Curved bowl of P */}
-                  <path d="M 550 200 Q 750 200 750 450 Q 750 550 600 600 Q 550 620 400 600" strokeWidth="60" fill="none" />
-                  {/* Inner curve for bowl */}
-                  <path d="M 400 350 Q 600 350 600 450 Q 600 550 400 550" fill="white" stroke="none" />
-                </g>
-              </svg>
+              <img
+                src="/CanSuyuLogo.png"
+                alt="Can Suyu Logo"
+                className="w-[240px] h-[240px] object-contain"
+              />
             </div>
           </div>
 
