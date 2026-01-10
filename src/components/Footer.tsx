@@ -59,8 +59,8 @@ c-67 -35 -134 -105 -169 -175 -26 -54 -29 -70 -29 -160 0 -88 3 -107 27 -157
                 </g>
               </svg>
               <h3 className="font-mono text-primary text-sm tracking-widest">
-                TANRIKULU.DEV
-              </h3>
+              TANRIKULU.DEV
+            </h3>
             </div>
             <p className="text-xs text-muted-foreground">
               Building tomorrow's digital solutions

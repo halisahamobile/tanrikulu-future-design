@@ -137,4 +137,25 @@ All colors MUST be HSL.
             drop-shadow(0 0 16px hsl(250 100% 65% / 0.3))
             drop-shadow(0 0 20px hsl(280 100% 65% / 0.2));
   }
+
+  .logo-glow-wrapper-green {
+    position: relative;
+    display: inline-block;
+  }
+
+  .logo-glow-wrapper-green::before {
+    content: '';
+    position: absolute;
+    inset: -10px;
+    background: radial-gradient(circle at center, hsl(142 76% 36% / 0.5), hsl(142 71% 45% / 0.5), transparent 70%);
+    filter: blur(20px);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: -1;
+    border-radius: 50%;
+  }
+
+  .logo-glow-wrapper-green:hover::before {
+    opacity: 1;
+  }
 }
