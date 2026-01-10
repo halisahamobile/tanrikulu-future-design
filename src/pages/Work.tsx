@@ -52,8 +52,9 @@ const Work = () => {
             </p>
           </div>
 
-          {/* Project Card */}
-          <div className="max-w-6xl mx-auto">
+          {/* Projects Grid */}
+          <div className="grid grid-cols-1 gap-8 max-w-6xl mx-auto">
+            {/* HalıSaha Mobile */}
             <div className="group relative overflow-hidden rounded-lg border border-border bg-card/50 backdrop-blur-sm hover:border-primary/50 transition-all duration-300 hover:shadow-glow">
               {/* Project Header */}
               <div className="p-6 border-b border-border">
@@ -105,6 +106,73 @@ const Work = () => {
                     <div>
                       <p className="font-medium mb-1">Performance Stats</p>
                       <p className="text-sm text-muted-foreground">Track your performance and statistics</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* CanSuyu */}
+            <div className="group relative overflow-hidden rounded-lg border border-border bg-card/50 backdrop-blur-sm hover:border-green-500/50 transition-all duration-300 hover:shadow-glow">
+              {/* Project Header */}
+              <div className="p-6 border-b border-border">
+                <h3 className="text-3xl font-semibold mb-2">CanSuyu</h3>
+                <p className="text-muted-foreground">
+                  Your intelligent companion for keeping your plants healthy and thriving. CanSuyu helps you care for your plants with AI-powered analysis and smart watering reminders.
+                </p>
+              </div>
+
+              {/* Logo */}
+              <div className="p-6">
+                <div className="flex justify-center">
+                  <div className="relative rounded-lg overflow-hidden border border-border bg-background flex items-center justify-center p-4">
+                    <img
+                      src="/CanSuyuLogo.png"
+                      alt="CanSuyu Logo"
+                      className="max-w-[200px] max-h-[150px] w-auto h-auto object-contain"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Project Features */}
+              <div className="p-6 border-t border-border bg-card/30">
+                <h4 className="text-lg font-semibold mb-4">Key Features</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                      <span className="text-green-400">💧</span>
+                    </div>
+                    <div>
+                      <p className="font-medium mb-1">Smart Watering Reminders</p>
+                      <p className="text-sm text-muted-foreground">Personalized reminders based on plant needs</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                      <span className="text-green-400">🤖</span>
+                    </div>
+                    <div>
+                      <p className="font-medium mb-1">AI Plant Analysis</p>
+                      <p className="text-sm text-muted-foreground">Identify plants and diagnose issues with AI</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                      <span className="text-green-400">📚</span>
+                    </div>
+                    <div>
+                      <p className="font-medium mb-1">Plant Care Library</p>
+                      <p className="text-sm text-muted-foreground">Comprehensive database of plant care information</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center flex-shrink-0">
+                      <span className="text-green-400">📈</span>
+                    </div>
+                    <div>
+                      <p className="font-medium mb-1">Health Tracking</p>
+                      <p className="text-sm text-muted-foreground">Monitor plant health over time</p>
                     </div>
                   </div>
                 </div>

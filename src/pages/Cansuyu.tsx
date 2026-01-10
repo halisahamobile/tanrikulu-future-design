@@ -47,7 +47,7 @@ const Cansuyu = () => {
             <div className="relative logo-glow-wrapper-green">
               <img
                 src="/CanSuyuLogo.png"
-                alt="Can Suyu Logo"
+                alt="CanSuyu Logo"
                 className="w-[240px] h-[240px] object-contain"
               />
             </div>
@@ -56,14 +56,14 @@ const Cansuyu = () => {
           {/* App Title */}
           <div className="text-center mb-16 space-y-4">
             <h2 className="text-5xl sm:text-6xl lg:text-7xl font-bold font-display">
-              <span className="text-gradient glow-text">Can Suyu</span>
+              <span className="text-gradient glow-text">CanSuyu</span>
             </h2>
             <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
               Smart Plant Care Companion
             </p>
             <p className="text-base text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               Your intelligent companion for keeping your plants healthy and thriving. 
-              Can Suyu helps you care for your plants with AI-powered analysis and smart watering reminders.
+              CanSuyu helps you care for your plants with AI-powered analysis and smart watering reminders.
             </p>
           </div>
 
@@ -77,7 +77,7 @@ const Cansuyu = () => {
                 <div>
                   <h3 className="text-xl font-semibold mb-2">Smart Watering Reminders</h3>
                   <p className="text-muted-foreground">
-                    Never forget to water your plants again. Can Suyu sends you personalized watering reminders 
+                    Never forget to water your plants again. CanSuyu sends you personalized watering reminders 
                     based on each plant's specific needs and your local climate conditions.
                   </p>
                 </div>
@@ -137,7 +137,7 @@ const Cansuyu = () => {
             <div className="relative z-10 text-center space-y-6">
               <h3 className="text-3xl font-bold font-display">Get In Touch</h3>
               <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                Have questions about Can Suyu or want to learn more? We'd love to hear from you.
+                Have questions about CanSuyu or want to learn more? We'd love to hear from you.
               </p>
               <div className="flex justify-center">
                 <a
