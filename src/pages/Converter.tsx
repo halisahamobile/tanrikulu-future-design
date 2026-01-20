@@ -325,7 +325,7 @@ const Converter = () => {
               className={cn(
                 "h-9 w-9 rounded-full border transition-colors shadow-sm",
                 isLight
-                  ? "bg-white/80 border-slate-200 text-slate-900 hover:bg-slate-100"
+                  ? "bg-gradient-to-br from-purple-500 to-fuchsia-500 border-transparent text-white hover:brightness-110"
                   : "bg-card/80 border-border text-slate-100 hover:bg-card",
               )}
               aria-label={isLight ? "Dark mode'a geç" : "Light mode'a geç"}
@@ -341,7 +341,7 @@ const Converter = () => {
             </div>
             <div className="space-y-3">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
-                <span className="text-foreground">Evrensel </span>
+                <span className={cn(isLight ? "text-slate-900" : "text-foreground")}>Evrensel </span>
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-fuchsia-400">
                   Çevirici
                 </span>
