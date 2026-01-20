@@ -353,11 +353,25 @@ const Converter = () => {
 
             {/* Stats */}
             <div className="flex flex-wrap items-center justify-center gap-3">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card/60 border border-border/70 text-sm">
+              <div
+                className={cn(
+                  "inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm",
+                  isLight
+                    ? "bg-white/80 border-slate-200/70"
+                    : "bg-card/60 border-border/70",
+                )}
+              >
                 <span className="h-2 w-2 rounded-full bg-purple-500" />
                 <span className="font-medium">14 Kategori</span>
               </div>
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card/60 border border-border/70 text-sm">
+              <div
+                className={cn(
+                  "inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm",
+                  isLight
+                    ? "bg-white/80 border-slate-200/70"
+                    : "bg-card/60 border-border/70",
+                )}
+              >
                 <span className="h-2 w-2 rounded-full bg-emerald-400" />
                 <span className="font-medium">99 Birim</span>
               </div>
@@ -371,11 +385,14 @@ const Converter = () => {
                 key={cat.id}
                 type="button"
                 onClick={() => setActiveCategoryId(cat.id)}
-                className={
+                className={cn(
+                  "px-4 sm:px-5 py-1.5 rounded-full text-xs sm:text-sm",
                   cat.id === activeCategoryId
-                    ? "px-4 sm:px-5 py-1.5 rounded-full bg-gradient-to-r from-purple-500 to-fuchsia-500 text-xs sm:text-sm text-white shadow-[0_10px_30px_rgba(168,85,247,0.5)]"
-                    : "px-4 sm:px-5 py-1.5 rounded-full bg-card/60 border border-border/60 text-xs sm:text-sm text-muted-foreground hover:text-foreground hover:border-border"
-                }
+                    ? "bg-gradient-to-r from-purple-500 to-fuchsia-500 text-white shadow-[0_10px_30px_rgba(168,85,247,0.5)]"
+                    : isLight
+                      ? "bg-white/60 border border-slate-200/60 text-slate-600 hover:text-slate-900 hover:border-slate-300"
+                      : "bg-card/60 border border-border/60 text-muted-foreground hover:text-foreground hover:border-border",
+                )}
               >
                 {cat.label}
               </button>
@@ -383,7 +400,14 @@ const Converter = () => {
           </div>
 
           {/* Main converter card */}
-          <Card className="relative overflow-hidden border border-border/80 bg-card/60 backdrop-blur-xl shadow-[0_22px_60px_rgba(15,23,42,0.55)]">
+          <Card
+            className={cn(
+              "relative overflow-hidden border backdrop-blur-xl",
+              isLight
+                ? "border-slate-200/80 bg-white/90 shadow-[0_22px_60px_rgba(0,0,0,0.08)]"
+                : "border-border/80 bg-card/60 shadow-[0_22px_60px_rgba(15,23,42,0.55)]",
+            )}
+          >
             <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-purple-500 via-fuchsia-500 to-blue-500" />
             <div className="p-6 sm:p-8 space-y-8">
               {/* Source */}
@@ -397,10 +421,22 @@ const Converter = () => {
                     inputMode="decimal"
                     value={sourceValue}
                     onChange={(e) => setSourceValue(e.target.value)}
-                    className="h-12 rounded-xl bg-background/70 border-border/60 text-base"
+                    className={cn(
+                      "h-12 rounded-xl text-base",
+                      isLight
+                        ? "bg-white border-slate-200/60"
+                        : "bg-background/70 border-border/60",
+                    )}
                   />
                   <Select value={sourceUnit} onValueChange={setSourceUnit}>
-                    <SelectTrigger className="h-12 rounded-xl bg-background/70 border-border/60 text-sm">
+                    <SelectTrigger
+                      className={cn(
+                        "h-12 rounded-xl text-sm",
+                        isLight
+                          ? "bg-white border-slate-200/60"
+                          : "bg-background/70 border-border/60",
+                      )}
+                    >
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -438,7 +474,12 @@ const Converter = () => {
                       readOnly
                       value={result || ""}
                       placeholder="0"
-                      className="h-12 rounded-xl bg-background/60 border-border/60 text-base pr-10"
+                      className={cn(
+                        "h-12 rounded-xl text-base pr-10",
+                        isLight
+                          ? "bg-white/90 border-slate-200/60"
+                          : "bg-background/60 border-border/60",
+                      )}
                     />
                     <button
                       type="button"
@@ -449,7 +490,14 @@ const Converter = () => {
                     </button>
                   </div>
                   <Select value={targetUnit} onValueChange={setTargetUnit}>
-                    <SelectTrigger className="h-12 rounded-xl bg-background/70 border-border/60 text-sm">
+                    <SelectTrigger
+                      className={cn(
+                        "h-12 rounded-xl text-sm",
+                        isLight
+                          ? "bg-white border-slate-200/60"
+                          : "bg-background/70 border-border/60",
+                      )}
+                    >
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -505,7 +553,14 @@ const Converter = () => {
           </Card>
 
           {/* Tips */}
-          <Card className="border border-border/70 bg-card/70 backdrop-blur-md">
+          <Card
+            className={cn(
+              "border backdrop-blur-md",
+              isLight
+                ? "border-slate-200/70 bg-white/80"
+                : "border-border/70 bg-card/70",
+            )}
+          >
             <div className="px-6 py-4 border-b border-border/60">
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
                 Hızlı İpuçları
