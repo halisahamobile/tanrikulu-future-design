@@ -433,7 +433,7 @@ const Converter = () => {
                       className={cn(
                         "h-12 rounded-xl text-sm",
                         isLight
-                          ? "bg-white border-slate-200/60"
+                          ? "bg-white border-slate-200/60 text-slate-900"
                           : "bg-background/70 border-border/60",
                       )}
                     >
@@ -494,7 +494,7 @@ const Converter = () => {
                       className={cn(
                         "h-12 rounded-xl text-sm",
                         isLight
-                          ? "bg-white border-slate-200/60"
+                          ? "bg-white border-slate-200/60 text-slate-900"
                           : "bg-background/70 border-border/60",
                       )}
                     >
