@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ArrowUpDown, Calculator, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -6,53 +6,231 @@ import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const lengthUnits = [
-  { id: "meter", label: "Metre", factor: 1 },
-  { id: "kilometer", label: "Kilometre", factor: 1000 },
-  { id: "centimeter", label: "Santimetre", factor: 0.01 },
-  { id: "millimeter", label: "Milimetre", factor: 0.001 },
-  { id: "inch", label: "İnç", factor: 0.0254 },
-  { id: "foot", label: "Fit", factor: 0.3048 },
-  { id: "yard", label: "Yard", factor: 0.9144 },
-  { id: "mile", label: "Mil", factor: 1609.34 },
-];
+type CategoryId =
+  | "length"
+  | "weight"
+  | "temperature"
+  | "volume"
+  | "area"
+  | "speed"
+  | "time"
+  | "digital"
+  | "pressure";
 
-const categories = [
-  "Uzunluk",
-  "Ağırlık",
-  "Sıcaklık",
-  "Hacim",
-  "Alan",
-  "Hız",
-  "Zaman",
-  "Dijital Depolama",
-  "Basınç",
+type CategoryType = "linear" | "temperature";
+
+type LinearUnit = {
+  id: string;
+  label: string;
+  factor: number; // base unit multiplier
+};
+
+type TemperatureUnit = {
+  id: string;
+  label: string;
+  toBase: (value: number) => number; // to °C
+  fromBase: (value: number) => number; // from °C
+};
+
+type CategoryConfig =
+  | {
+      id: CategoryId;
+      label: string;
+      type: "linear";
+      units: LinearUnit[];
+    }
+  | {
+      id: CategoryId;
+      label: string;
+      type: "temperature";
+      units: TemperatureUnit[];
+    };
+
+const categoryConfigs: CategoryConfig[] = [
+  {
+    id: "length",
+    label: "Uzunluk",
+    type: "linear",
+    units: [
+      { id: "meter", label: "Metre", factor: 1 },
+      { id: "kilometer", label: "Kilometre", factor: 1000 },
+      { id: "centimeter", label: "Santimetre", factor: 0.01 },
+      { id: "millimeter", label: "Milimetre", factor: 0.001 },
+      { id: "inch", label: "İnç", factor: 0.0254 },
+      { id: "foot", label: "Fit", factor: 0.3048 },
+      { id: "yard", label: "Yard", factor: 0.9144 },
+      { id: "mile", label: "Mil", factor: 1609.344 },
+    ],
+  },
+  {
+    id: "weight",
+    label: "Ağırlık",
+    type: "linear",
+    units: [
+      { id: "gram", label: "Gram", factor: 1 },
+      { id: "kilogram", label: "Kilogram", factor: 1000 },
+      { id: "milligram", label: "Miligram", factor: 0.001 },
+      { id: "ton", label: "Ton", factor: 1_000_000 },
+      { id: "pound", label: "Libre (lb)", factor: 453.59237 },
+      { id: "ounce", label: "Ons (oz)", factor: 28.349523125 },
+    ],
+  },
+  {
+    id: "temperature",
+    label: "Sıcaklık",
+    type: "temperature",
+    units: [
+      {
+        id: "celsius",
+        label: "Santigrat (°C)",
+        toBase: (v) => v,
+        fromBase: (v) => v,
+      },
+      {
+        id: "fahrenheit",
+        label: "Fahrenheit (°F)",
+        toBase: (v) => ((v - 32) * 5) / 9,
+        fromBase: (v) => (v * 9) / 5 + 32,
+      },
+      {
+        id: "kelvin",
+        label: "Kelvin (K)",
+        toBase: (v) => v - 273.15,
+        fromBase: (v) => v + 273.15,
+      },
+    ],
+  },
+  {
+    id: "volume",
+    label: "Hacim",
+    type: "linear",
+    units: [
+      { id: "liter", label: "Litre", factor: 1 },
+      { id: "milliliter", label: "Mililitre", factor: 0.001 },
+      { id: "cubic_meter", label: "Metreküp (m³)", factor: 1000 },
+      { id: "gallon_us", label: "Galon (US)", factor: 3.785411784 },
+      { id: "pint_us", label: "Pint (US)", factor: 0.473176473 },
+    ],
+  },
+  {
+    id: "area",
+    label: "Alan",
+    type: "linear",
+    units: [
+      { id: "square_meter", label: "Metrekare (m²)", factor: 1 },
+      { id: "square_kilometer", label: "Kilometrekare (km²)", factor: 1_000_000 },
+      { id: "hectare", label: "Hektar (ha)", factor: 10_000 },
+      { id: "square_foot", label: "Fit Kare (ft²)", factor: 0.09290304 },
+      { id: "square_mile", label: "Mil Kare (mi²)", factor: 2_589_988.110336 },
+    ],
+  },
+  {
+    id: "speed",
+    label: "Hız",
+    type: "linear",
+    units: [
+      { id: "meters_per_second", label: "Metre / Saniye", factor: 1 },
+      { id: "kilometers_per_hour", label: "Kilometre / Saat", factor: 0.277777778 },
+      { id: "miles_per_hour", label: "Mil / Saat (mph)", factor: 0.44704 },
+      { id: "knot", label: "Knot", factor: 0.514444444 },
+    ],
+  },
+  {
+    id: "time",
+    label: "Zaman",
+    type: "linear",
+    units: [
+      { id: "second", label: "Saniye", factor: 1 },
+      { id: "minute", label: "Dakika", factor: 60 },
+      { id: "hour", label: "Saat", factor: 3600 },
+      { id: "day", label: "Gün", factor: 86_400 },
+    ],
+  },
+  {
+    id: "digital",
+    label: "Dijital Depolama",
+    type: "linear",
+    units: [
+      { id: "byte", label: "Bayt (B)", factor: 1 },
+      { id: "kilobyte", label: "Kilobayt (KB)", factor: 1024 },
+      { id: "megabyte", label: "Megabayt (MB)", factor: 1024 * 1024 },
+      { id: "gigabyte", label: "Gigabayt (GB)", factor: 1024 * 1024 * 1024 },
+      {
+        id: "terabyte",
+        label: "Terabayt (TB)",
+        factor: 1024 * 1024 * 1024 * 1024,
+      },
+    ],
+  },
+  {
+    id: "pressure",
+    label: "Basınç",
+    type: "linear",
+    units: [
+      { id: "pascal", label: "Pascal (Pa)", factor: 1 },
+      { id: "bar", label: "Bar", factor: 100_000 },
+      { id: "atmosphere", label: "Atmosfer (atm)", factor: 101_325 },
+      { id: "psi", label: "Psi", factor: 6_894.757293168 },
+    ],
+  },
 ];
 
 const Converter = () => {
-  const [activeCategory] = useState<string>("Uzunluk");
-  const [sourceUnit, setSourceUnit] = useState<string>("meter");
-  const [targetUnit, setTargetUnit] = useState<string>("meter");
+  const [activeCategoryId, setActiveCategoryId] = useState<CategoryId>("length");
+  const activeCategory = categoryConfigs.find((c) => c.id === activeCategoryId) ?? categoryConfigs[0];
+
+  const [sourceUnit, setSourceUnit] = useState<string>(activeCategory.type === "linear" ? activeCategory.units[0].id : "celsius");
+  const [targetUnit, setTargetUnit] = useState<string>(
+    activeCategory.type === "linear" ? activeCategory.units[1]?.id ?? activeCategory.units[0].id : "meter",
+  );
   const [sourceValue, setSourceValue] = useState<string>("1");
   const [copied, setCopied] = useState(false);
+
+  // Kategori değiştiğinde birimleri ve değeri sıfırla
+  useEffect(() => {
+    const current = categoryConfigs.find((c) => c.id === activeCategoryId) ?? categoryConfigs[0];
+    const firstUnit = current.units[0];
+    const secondUnit = current.units[1] ?? current.units[0];
+    setSourceUnit(firstUnit.id);
+    setTargetUnit(secondUnit.id);
+    setSourceValue("1");
+    setCopied(false);
+  }, [activeCategoryId]);
 
   const result = useMemo(() => {
     const numeric = parseFloat(sourceValue.replace(",", "."));
     if (Number.isNaN(numeric)) return "";
 
-    const from = lengthUnits.find((u) => u.id === sourceUnit);
-    const to = lengthUnits.find((u) => u.id === targetUnit);
+    const category = categoryConfigs.find((c) => c.id === activeCategoryId);
+    if (!category) return "";
+
+    if (category.type === "linear") {
+      const from = (category.units as LinearUnit[]).find((u) => u.id === sourceUnit);
+      const to = (category.units as LinearUnit[]).find((u) => u.id === targetUnit);
+      if (!from || !to) return "";
+
+      const valueInBase = numeric * from.factor;
+      const converted = valueInBase / to.factor;
+
+      return converted.toLocaleString("tr-TR", {
+        maximumFractionDigits: 8,
+        useGrouping: true,
+      });
+    }
+
+    // temperature
+    const from = (category.units as TemperatureUnit[]).find((u) => u.id === sourceUnit);
+    const to = (category.units as TemperatureUnit[]).find((u) => u.id === targetUnit);
     if (!from || !to) return "";
 
-    const valueInMeters = numeric * from.factor;
-    const converted = valueInMeters / to.factor;
+    const valueInCelsius = from.toBase(numeric);
+    const converted = to.fromBase(valueInCelsius);
 
-    // 1 Metre = 1.000,00 Metre gibi aşırı uzun olmasın diye
     return converted.toLocaleString("tr-TR", {
-      maximumFractionDigits: 6,
+      maximumFractionDigits: 4,
       useGrouping: true,
     });
-  }, [sourceUnit, targetUnit, sourceValue]);
+  }, [activeCategoryId, sourceUnit, targetUnit, sourceValue]);
 
   const handleSwap = () => {
     setSourceUnit(targetUnit);
@@ -70,8 +248,9 @@ const Converter = () => {
     }
   };
 
-  const sourceUnitLabel = lengthUnits.find((u) => u.id === sourceUnit)?.label ?? "";
-  const targetUnitLabel = lengthUnits.find((u) => u.id === targetUnit)?.label ?? "";
+  const currentUnits = activeCategory.units as (LinearUnit | TemperatureUnit)[];
+  const sourceUnitLabel = currentUnits.find((u) => u.id === sourceUnit)?.label ?? "";
+  const targetUnitLabel = currentUnits.find((u) => u.id === targetUnit)?.label ?? "";
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-background via-background/95 to-background">
@@ -145,17 +324,18 @@ const Converter = () => {
 
           {/* Category pills */}
           <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
-            {categories.map((cat) => (
+            {categoryConfigs.map((cat) => (
               <button
-                key={cat}
+                key={cat.id}
                 type="button"
+                onClick={() => setActiveCategoryId(cat.id)}
                 className={
-                  cat === activeCategory
+                  cat.id === activeCategoryId
                     ? "px-4 sm:px-5 py-1.5 rounded-full bg-gradient-to-r from-purple-500 to-fuchsia-500 text-xs sm:text-sm text-white shadow-[0_10px_30px_rgba(168,85,247,0.5)]"
-                    : "px-4 sm:px-5 py-1.5 rounded-full bg-card/60 border border-border/60 text-xs sm:text-sm text-muted-foreground cursor-not-allowed"
+                    : "px-4 sm:px-5 py-1.5 rounded-full bg-card/60 border border-border/60 text-xs sm:text-sm text-muted-foreground hover:text-foreground hover:border-border"
                 }
               >
-                {cat}
+                {cat.label}
               </button>
             ))}
           </div>
@@ -182,7 +362,7 @@ const Converter = () => {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {lengthUnits.map((unit) => (
+                      {(activeCategory.units as (LinearUnit | TemperatureUnit)[]).map((unit) => (
                         <SelectItem key={unit.id} value={unit.id}>
                           {unit.label}
                         </SelectItem>
@@ -231,7 +411,7 @@ const Converter = () => {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {lengthUnits.map((unit) => (
+                      {(activeCategory.units as (LinearUnit | TemperatureUnit)[]).map((unit) => (
                         <SelectItem key={unit.id} value={unit.id}>
                           {unit.label}
                         </SelectItem>
@@ -243,9 +423,38 @@ const Converter = () => {
 
               {/* Result text */}
               <p className="text-xs sm:text-sm text-muted-foreground pt-2">
-                {result
-                  ? `1 ${sourceUnitLabel} = ${(1 * (lengthUnits.find((u) => u.id === sourceUnit)?.factor ?? 1) / (lengthUnits.find((u) => u.id === targetUnit)?.factor ?? 1)).toLocaleString("tr-TR", { maximumFractionDigits: 6 })} ${targetUnitLabel}`
-                  : "Geçerli bir sayı girerek dönüştürmeye başlayın."}
+                {(() => {
+                  const category = activeCategory;
+                  if (!result) {
+                    return "Geçerli bir sayı girerek dönüştürmeye başlayın.";
+                  }
+
+                  if (category.type === "linear") {
+                    const units = category.units as LinearUnit[];
+                    const from = units.find((u) => u.id === sourceUnit);
+                    const to = units.find((u) => u.id === targetUnit);
+                    if (!from || !to) return "";
+
+                    const base = 1 * from.factor;
+                    const converted = base / to.factor;
+
+                    return `1 ${sourceUnitLabel} = ${converted.toLocaleString("tr-TR", {
+                      maximumFractionDigits: 8,
+                    })} ${targetUnitLabel}`;
+                  }
+
+                  const units = category.units as TemperatureUnit[];
+                  const from = units.find((u) => u.id === sourceUnit);
+                  const to = units.find((u) => u.id === targetUnit);
+                  if (!from || !to) return "";
+
+                  const base = from.toBase(1);
+                  const converted = to.fromBase(base);
+
+                  return `1 ${sourceUnitLabel} = ${converted.toLocaleString("tr-TR", {
+                    maximumFractionDigits: 4,
+                  })} ${targetUnitLabel}`;
+                })()}
               </p>
               {copied && (
                 <p className="text-xs text-emerald-400">Sonuç panoya kopyalandı.</p>
