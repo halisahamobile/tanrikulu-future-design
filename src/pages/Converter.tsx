@@ -1,23 +1,82 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowUpDown, Calculator, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const lengthUnits = [
+  { id: "meter", label: "Metre", factor: 1 },
+  { id: "kilometer", label: "Kilometre", factor: 1000 },
+  { id: "centimeter", label: "Santimetre", factor: 0.01 },
+  { id: "millimeter", label: "Milimetre", factor: 0.001 },
+  { id: "inch", label: "İnç", factor: 0.0254 },
+  { id: "foot", label: "Fit", factor: 0.3048 },
+  { id: "yard", label: "Yard", factor: 0.9144 },
+  { id: "mile", label: "Mil", factor: 1609.34 },
+];
+
+const categories = [
+  "Uzunluk",
+  "Ağırlık",
+  "Sıcaklık",
+  "Hacim",
+  "Alan",
+  "Hız",
+  "Zaman",
+  "Dijital Depolama",
+  "Basınç",
+];
 
 const Converter = () => {
-  const [input, setInput] = useState("");
-  const [output, setOutput] = useState("");
+  const [activeCategory] = useState<string>("Uzunluk");
+  const [sourceUnit, setSourceUnit] = useState<string>("meter");
+  const [targetUnit, setTargetUnit] = useState<string>("meter");
+  const [sourceValue, setSourceValue] = useState<string>("1");
+  const [copied, setCopied] = useState(false);
 
-  const handleConvert = () => {
-    // Placeholder logic – adjust as needed to match the original converter behavior
-    setOutput(input);
+  const result = useMemo(() => {
+    const numeric = parseFloat(sourceValue.replace(",", "."));
+    if (Number.isNaN(numeric)) return "";
+
+    const from = lengthUnits.find((u) => u.id === sourceUnit);
+    const to = lengthUnits.find((u) => u.id === targetUnit);
+    if (!from || !to) return "";
+
+    const valueInMeters = numeric * from.factor;
+    const converted = valueInMeters / to.factor;
+
+    // 1 Metre = 1.000,00 Metre gibi aşırı uzun olmasın diye
+    return converted.toLocaleString("tr-TR", {
+      maximumFractionDigits: 6,
+      useGrouping: true,
+    });
+  }, [sourceUnit, targetUnit, sourceValue]);
+
+  const handleSwap = () => {
+    setSourceUnit(targetUnit);
+    setTargetUnit(sourceUnit);
   };
 
+  const handleCopy = async () => {
+    if (!result) return;
+    try {
+      await navigator.clipboard.writeText(result);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      // ignore
+    }
+  };
+
+  const sourceUnitLabel = lengthUnits.find((u) => u.id === sourceUnit)?.label ?? "";
+  const targetUnitLabel = lengthUnits.find((u) => u.id === targetUnit)?.label ?? "";
+
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-gradient-to-b from-background via-background/95 to-background">
       {/* Header */}
-      <header className="border-b border-border bg-card/30 backdrop-blur-sm sticky top-0 z-50">
+      <header className="border-b border-border/60 bg-card/40 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <Link
@@ -51,58 +110,169 @@ const Converter = () => {
         </div>
       </header>
 
-      {/* Content */}
-      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="max-w-4xl mx-auto space-y-10">
-          {/* Page Title */}
-          <div className="text-center space-y-4">
-            <h2 className="text-5xl sm:text-6xl font-bold font-display">
-              <span className="text-gradient glow-text">Wide Reach Converter</span>
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Convert your content in a way that maximizes compatibility and reach across different platforms.
-            </p>
-          </div>
-
-          {/* Converter Card */}
-          <Card className="p-6 sm:p-8 bg-card/50 backdrop-blur-sm border-border">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-foreground">Input</label>
-                <Textarea
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder="Paste your content here..."
-                  className="min-h-[220px] resize-none"
-                />
-              </div>
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-foreground">Output</label>
-                <Textarea
-                  value={output}
-                  readOnly
-                  placeholder="Converted content will appear here..."
-                  className="min-h-[220px] resize-none"
-                />
-              </div>
+      {/* Hero + Converter */}
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div className="max-w-5xl mx-auto space-y-10">
+          {/* Top icon + title */}
+          <div className="flex flex-col items-center gap-6 text-center">
+            <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-purple-500 to-fuchsia-500 flex items-center justify-center shadow-[0_18px_45px_rgba(168,85,247,0.5)]">
+              <Calculator className="h-7 w-7 text-white" />
+            </div>
+            <div className="space-y-3">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight">
+                <span className="text-foreground">Evrensel </span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-fuchsia-400">
+                  Çevirici
+                </span>
+              </h1>
+              <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
+                Tüm birimleri hassas ve kolay bir şekilde dönüştürün.
+              </p>
             </div>
 
-            <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-              <p className="text-xs text-muted-foreground">
-                This is a mirrored interface of the original converter at{" "}
-                <a
-                  href="https://wide-reach-converter.lovable.app"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="underline underline-offset-4 text-primary hover:text-primary/80"
+            {/* Stats */}
+            <div className="flex flex-wrap items-center justify-center gap-3">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card/60 border border-border/70 text-sm">
+                <span className="h-2 w-2 rounded-full bg-purple-500" />
+                <span className="font-medium">14 Kategori</span>
+              </div>
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card/60 border border-border/70 text-sm">
+                <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                <span className="font-medium">99 Birim</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Category pills */}
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+            {categories.map((cat) => (
+              <button
+                key={cat}
+                type="button"
+                className={
+                  cat === activeCategory
+                    ? "px-4 sm:px-5 py-1.5 rounded-full bg-gradient-to-r from-purple-500 to-fuchsia-500 text-xs sm:text-sm text-white shadow-[0_10px_30px_rgba(168,85,247,0.5)]"
+                    : "px-4 sm:px-5 py-1.5 rounded-full bg-card/60 border border-border/60 text-xs sm:text-sm text-muted-foreground cursor-not-allowed"
+                }
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+
+          {/* Main converter card */}
+          <Card className="relative overflow-hidden border border-border/80 bg-card/60 backdrop-blur-xl shadow-[0_22px_60px_rgba(15,23,42,0.55)]">
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-purple-500 via-fuchsia-500 to-blue-500" />
+            <div className="p-6 sm:p-8 space-y-8">
+              {/* Source */}
+              <div className="space-y-2">
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                  Kaynak
+                </p>
+                <div className="grid grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] gap-3 items-center">
+                  <Input
+                    type="text"
+                    inputMode="decimal"
+                    value={sourceValue}
+                    onChange={(e) => setSourceValue(e.target.value)}
+                    className="h-12 rounded-xl bg-background/70 border-border/60 text-base"
+                  />
+                  <Select value={sourceUnit} onValueChange={setSourceUnit}>
+                    <SelectTrigger className="h-12 rounded-xl bg-background/70 border-border/60 text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {lengthUnits.map((unit) => (
+                        <SelectItem key={unit.id} value={unit.id}>
+                          {unit.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* Swap button */}
+              <div className="flex justify-center">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-11 w-11 rounded-full border border-purple-500/70 bg-gradient-to-br from-purple-500/20 to-fuchsia-500/20 text-purple-300 hover:text-white hover:bg-purple-500/70"
+                  onClick={handleSwap}
                 >
-                  wide-reach-converter.lovable.app
-                </a>
-                .
+                  <ArrowUpDown className="h-5 w-5" />
+                </Button>
+              </div>
+
+              {/* Target */}
+              <div className="space-y-2">
+                <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground">
+                  Hedef
+                </p>
+                <div className="grid grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] gap-3 items-center">
+                  <div className="relative">
+                    <Input
+                      readOnly
+                      value={result || ""}
+                      placeholder="0"
+                      className="h-12 rounded-xl bg-background/60 border-border/60 text-base pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleCopy}
+                      className="absolute inset-y-0 right-2 flex items-center justify-center text-muted-foreground hover:text-foreground"
+                    >
+                      <Copy className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <Select value={targetUnit} onValueChange={setTargetUnit}>
+                    <SelectTrigger className="h-12 rounded-xl bg-background/70 border-border/60 text-sm">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {lengthUnits.map((unit) => (
+                        <SelectItem key={unit.id} value={unit.id}>
+                          {unit.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              {/* Result text */}
+              <p className="text-xs sm:text-sm text-muted-foreground pt-2">
+                {result
+                  ? `1 ${sourceUnitLabel} = ${(1 * (lengthUnits.find((u) => u.id === sourceUnit)?.factor ?? 1) / (lengthUnits.find((u) => u.id === targetUnit)?.factor ?? 1)).toLocaleString("tr-TR", { maximumFractionDigits: 6 })} ${targetUnitLabel}`
+                  : "Geçerli bir sayı girerek dönüştürmeye başlayın."}
               </p>
-              <Button variant="hero" size="lg" onClick={handleConvert}>
-                Convert
-              </Button>
+              {copied && (
+                <p className="text-xs text-emerald-400">Sonuç panoya kopyalandı.</p>
+              )}
+            </div>
+          </Card>
+
+          {/* Tips */}
+          <Card className="border border-border/70 bg-card/70 backdrop-blur-md">
+            <div className="px-6 py-4 border-b border-border/60">
+              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">
+                Hızlı İpuçları
+              </p>
+            </div>
+            <div className="px-6 py-4 grid gap-3 text-xs sm:text-sm text-muted-foreground sm:grid-cols-3">
+              <div className="flex items-start gap-2">
+                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-purple-400" />
+                <p>Birimleri değiştirmek için ok butonuna tıklayın.</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-400" />
+                <p>Sonucu kopyalamak için kopyala ikonuna tıklayın.</p>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="mt-1 h-1.5 w-1.5 rounded-full bg-sky-400" />
+                <p>Kategoriler arasında kaydırarak gezinin.</p>
+              </div>
             </div>
           </Card>
         </div>
