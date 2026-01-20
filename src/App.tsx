@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Work from "./pages/Work";
 import Cansuyu from "./pages/Cansuyu";
 import CansuyuPrivacy from "./pages/CansuyuPrivacy";
+import Converter from "./pages/Converter";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +23,7 @@ const App = () => (
           <Route path="/work" element={<Work />} />
           <Route path="/cansuyu" element={<Cansuyu />} />
           <Route path="/cansuyu/privacy" element={<CansuyuPrivacy />} />
+          <Route path="/converter" element={<Converter />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
