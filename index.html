@@ -154,12 +154,13 @@
   .svc{ padding: 34px 30px 30px; min-height: 420px; display: flex; flex-direction: column; transition: transform .5s cubic-bezier(.2,.7,.2,1); will-change: transform; }
   .svc:hover{ transform: translateY(-10px); }
   .svc .idx{ font-family:'Hanken Grotesk',sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.16em; color: var(--ink-faint); }
-  .svc .orb{ width: 80px; height: 80px; border-radius: 50%; margin: 26px 0 24px; position: relative; }
-  .svc-1 .orb{ background: radial-gradient(circle at 35% 30%, var(--terracotta), transparent 70%), radial-gradient(circle at 70% 75%, var(--rose), transparent 65%); box-shadow: 0 0 44px rgba(188,94,56,0.30); }
-  .svc-2 .orb{ background: radial-gradient(circle at 35% 30%, var(--sage), transparent 70%), radial-gradient(circle at 70% 75%, var(--ochre), transparent 65%); box-shadow: 0 0 44px rgba(142,156,114,0.32); }
-  .svc-3 .orb{ background: radial-gradient(circle at 35% 30%, var(--plum), transparent 70%), radial-gradient(circle at 70% 75%, var(--rose), transparent 65%); box-shadow: 0 0 44px rgba(126,86,106,0.30); }
-  .svc .orb::after{ content:""; position: absolute; inset: -8px; border-radius: 50%; border: 1px solid rgba(120,95,70,0.22); animation: spin 16s linear infinite; }
-  @keyframes spin{ to{ transform: rotate(360deg); } }
+  .svc .orb{ width: 72px; height: 72px; border-radius: 20px; margin: 26px 0 24px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--glass-brd); background: rgba(255,255,255,0.30); transition: transform .5s cubic-bezier(.2,.7,.2,1), background .4s ease; }
+  .svc .orb svg{ width: 34px; height: 34px; }
+  .svc .orb svg [stroke]{ transition: stroke .4s ease; }
+  .svc:hover .orb{ transform: translateY(-2px) rotate(-3deg); }
+  .svc-1 .orb{ color: var(--terracotta); background: rgba(188,94,56,0.08); }
+  .svc-2 .orb{ color: var(--sage); background: rgba(142,156,114,0.10); }
+  .svc-3 .orb{ color: var(--plum); background: rgba(126,86,106,0.09); }
   .svc h3{ font-family:'Cormorant Garamond', serif; font-size: 38px; line-height: 0.98; letter-spacing: 0; font-weight: 600; }
   .svc h3 .it{ font-weight: 500; color: var(--terracotta); }
   .svc p{ color: var(--ink-soft); font-size: 15px; margin-top: 12px; flex: 1; }
@@ -355,7 +356,12 @@
     <div class="svc-grid">
       <article class="svc glass svc-1 reveal">
         <div class="idx">[ 01 ]</div>
-        <div class="orb"></div>
+        <div class="orb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="7" y="2" width="10" height="20" rx="2.5"/>
+            <path d="M11 18.5h2"/>
+          </svg>
+        </div>
         <h3>Mobile<br>Applications</h3>
         <p>Native and cross-platform mobile apps built with highly performant technologies to deliver seamless experiences across every device.</p>
         <div class="tags"><span>iOS &amp; Android</span><span>React Native</span><span>Flutter</span><span>Performance</span></div>
@@ -363,7 +369,15 @@
 
       <article class="svc glass svc-2 reveal">
         <div class="idx">[ 02 ]</div>
-        <div class="orb"></div>
+        <div class="orb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="2.5" y="4" width="19" height="15" rx="2.5"/>
+            <path d="M2.5 8h19"/>
+            <path d="M5.5 6.1h.01M7.7 6.1h.01M9.9 6.1h.01"/>
+            <path d="M9 15l-2-2.5L9 10"/>
+            <path d="M14 15l2-2.5L14 10"/>
+          </svg>
+        </div>
         <h3>Web<br>Development</h3>
         <p>Modern, responsive, fast-loading sites built with the latest frameworks — engineered for the best digital experience your users will have today.</p>
         <div class="tags"><span>React · Next.js</span><span>Backend</span><span>SEO</span><span>Clean UI/UX</span></div>
@@ -371,7 +385,13 @@
 
       <article class="svc glass svc-3 reveal">
         <div class="idx">[ 03 ]</div>
-        <div class="orb"></div>
+        <div class="orb">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M15.5 4.5l4 4L9 19l-4.5.5L5 15z"/>
+            <path d="M13.5 6.5l4 4"/>
+            <path d="M5 15l3.5 3.5"/>
+          </svg>
+        </div>
         <h3>Graphic<br><span class="it">Design</span></h3>
         <p>Visually stunning, impactful design that represents your brand and values accurately while drawing in the right kind of customer.</p>
         <div class="tags"><span>Brand Identity</span><span>Logo</span><span>Custom Graphics</span><span>Design Systems</span></div>
